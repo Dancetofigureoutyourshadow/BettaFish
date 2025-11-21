@@ -218,17 +218,17 @@ class TemplateSelectionNode(BaseNode):
     def _extract_template_description(self, template_name: str) -> str:
         """根据模板名称生成描述"""
         if '企业品牌' in template_name:
-            return "适用于企业品牌声誉和形象分析"
+            return "适用于上市公司基本面与市场声誉分析"
         elif '市场竞争' in template_name:
-            return "适用于市场竞争格局和对手分析"
+            return "适用于行业竞争格局与上市公司对比分析"
         elif '日常' in template_name or '定期' in template_name:
-            return "适用于日常监测和定期汇报"
+            return "适用于周/月度A股监测简报"
         elif '政策' in template_name or '行业' in template_name:
-            return "适用于政策影响和行业动态分析"
+            return "适用于重要政策或行业事件的A股影响评估"
         elif '热点' in template_name or '社会' in template_name:
-            return "适用于社会热点和公共事件分析"
+            return "适用于A股市场热点与上市公司重大事项分析"
         elif '突发' in template_name or '危机' in template_name:
-            return "适用于突发事件和危机公关"
+            return "适用于上市公司突发事件与风险应对"
         
         return "通用报告模板"
     

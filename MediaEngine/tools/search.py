@@ -114,11 +114,41 @@ class BochaMultimodalSearch:
         }
 
     def _parse_search_response(self, response_dict: Dict[str, Any], query: str) -> BochaResponse:
-        """从API的原始字典响应中解析出结构化的BochaResponse对象"""
+        """从API的原始字典响应中解析出结构化的BochaResponse对象（兼容 Bocha AI Search 与 Web Search）"""
 
         final_response = BochaResponse(query=query)
         final_response.conversation_id = response_dict.get('conversation_id')
 
+        if "web-search" in self.BOCHA_BASE_URL:
+            # 优先处理 Web Search 响应结构
+            data_block = response_dict.get('data')
+            # 解析网页结果
+            web_pages = data_block.get('webPages') or {}
+            web_values = web_pages.get('value') or []
+            for item in web_values:
+                final_response.webpages.append(WebpageResult(
+                    name=item.get('name'),
+                    url=item.get('url'),
+                    snippet=item.get('snippet'),
+                    display_url=item.get('displayUrl'),
+                    date_last_crawled=item.get('dateLastCrawled')
+                ))
+            # 解析图片结果
+            images_block = data_block.get('images') or {}
+            image_values = images_block.get('value') or []
+            for img in image_values:
+                final_response.images.append(ImageResult(
+                    name=img.get('name'),
+                    content_url=img.get('contentUrl'),
+                    host_page_url=img.get('hostPageUrl'),
+                    thumbnail_url=img.get('thumbnailUrl'),
+                    width=img.get('width'),
+                    height=img.get('height')
+                ))
+            # videos 等其他类型暂不解析为 modal_cards
+            return final_response
+
+        # 兼容 Bocha AI Search 的消息格式
         messages = response_dict.get('messages', [])
         for msg in messages:
             role = msg.get('role')

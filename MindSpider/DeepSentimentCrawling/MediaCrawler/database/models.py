@@ -4,431 +4,310 @@ from sqlalchemy.orm import sessionmaker
 
 Base = declarative_base()
 
-class BilibiliVideo(Base):
-    __tablename__ = 'bilibili_video'
+# 东方财富股吧帖子表
+class EastmoneyPost(Base):
+    __tablename__ = 'eastmoney_post'
     id = Column(Integer, primary_key=True)
-    video_id = Column(BigInteger, nullable=False, index=True, unique=True)
-    video_url = Column(Text, nullable=False)
-    user_id = Column(BigInteger, index=True)
-    nickname = Column(Text)
+    post_id = Column(BigInteger, nullable=False, index=True, unique=True)
+    post_url = Column(Text, nullable=False)
+    user_id = Column(String(255), index=True)
+    author_name = Column(Text)
     avatar = Column(Text)
     liked_count = Column(Integer)
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)
-    video_type = Column(Text)
+    post_type = Column(Text)
     title = Column(Text)
-    desc = Column(Text)
+    content = Column(Text)
     create_time = Column(BigInteger, index=True)
-    disliked_count = Column(Text)
-    video_play_count = Column(Text)
-    video_favorite_count = Column(Text)
-    video_share_count = Column(Text)
-    video_coin_count = Column(Text)
-    video_danmaku = Column(Text)
-    video_comment = Column(Text)
-    video_cover_url = Column(Text)
+    read_count = Column(Text)
+    comment_count = Column(Text)
+    share_count = Column(Text)
+    stock_code = Column(String(20), index=True)  # 股票代码
+    stock_name = Column(Text)  # 股票名称
     source_keyword = Column(Text, default='')
 
-class BilibiliVideoComment(Base):
-    __tablename__ = 'bilibili_video_comment'
+# 东方财富评论表
+class EastmoneyComment(Base):
+    __tablename__ = 'eastmoney_comment'
     id = Column(Integer, primary_key=True)
     user_id = Column(String(255))
-    nickname = Column(Text)
-    sex = Column(Text)
-    sign = Column(Text)
+    user_name = Column(Text)
     avatar = Column(Text)
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)
     comment_id = Column(BigInteger, index=True)
-    video_id = Column(BigInteger, index=True)
+    post_id = Column(BigInteger, index=True)
     content = Column(Text)
     create_time = Column(BigInteger)
     sub_comment_count = Column(Text)
     parent_comment_id = Column(String(255))
     like_count = Column(Text, default='0')
 
-class BilibiliUpInfo(Base):
-    __tablename__ = 'bilibili_up_info'
+# 东方财富用户信息表
+class EastmoneyUserInfo(Base):
+    __tablename__ = 'eastmoney_user_info'
     id = Column(Integer, primary_key=True)
-    user_id = Column(BigInteger, index=True)
-    nickname = Column(Text)
-    sex = Column(Text)
-    sign = Column(Text)
+    user_id = Column(String(255), index=True, unique=True)
+    user_name = Column(Text)
     avatar = Column(Text)
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)
     total_fans = Column(Integer)
-    total_liked = Column(Integer)
-    user_rank = Column(Integer)
-    is_official = Column(Integer)
+    total_follows = Column(Integer)
+    total_posts = Column(Integer)
+    is_verified = Column(Integer)  # 是否认证用户
+    user_level = Column(Integer)  # 用户等级
 
-class BilibiliContactInfo(Base):
-    __tablename__ = 'bilibili_contact_info'
+# 雪球帖子表
+class XueqiuPost(Base):
+    __tablename__ = 'xueqiu_post'
     id = Column(Integer, primary_key=True)
-    up_id = Column(BigInteger, index=True)
-    fan_id = Column(BigInteger, index=True)
-    up_name = Column(Text)
-    fan_name = Column(Text)
-    up_sign = Column(Text)
-    fan_sign = Column(Text)
-    up_avatar = Column(Text)
-    fan_avatar = Column(Text)
-    add_ts = Column(BigInteger)
-    last_modify_ts = Column(BigInteger)
-
-class BilibiliUpDynamic(Base):
-    __tablename__ = 'bilibili_up_dynamic'
-    id = Column(Integer, primary_key=True)
-    dynamic_id = Column(BigInteger, index=True)
-    user_id = Column(String(255))
-    user_name = Column(Text)
-    text = Column(Text)
-    type = Column(Text)
-    pub_ts = Column(BigInteger)
-    total_comments = Column(Integer)
-    total_forwards = Column(Integer)
-    total_liked = Column(Integer)
-    add_ts = Column(BigInteger)
-    last_modify_ts = Column(BigInteger)
-
-class DouyinAweme(Base):
-    __tablename__ = 'douyin_aweme'
-    id = Column(Integer, primary_key=True)
-    user_id = Column(String(255))
-    sec_uid = Column(String(255))
-    short_user_id = Column(String(255))
-    user_unique_id = Column(String(255))
-    nickname = Column(Text)
+    post_id = Column(BigInteger, index=True, unique=True)
+    user_id = Column(String(255), index=True)
+    author_name = Column(Text)
     avatar = Column(Text)
     user_signature = Column(Text)
-    ip_location = Column(Text)
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)
-    aweme_id = Column(BigInteger, index=True)
-    aweme_type = Column(Text)
+    post_type = Column(Text)  # 帖子类型：原创/转发
     title = Column(Text)
-    desc = Column(Text)
+    content = Column(Text)
     create_time = Column(BigInteger, index=True)
     liked_count = Column(Text)
     comment_count = Column(Text)
-    share_count = Column(Text)
-    collected_count = Column(Text)
-    aweme_url = Column(Text)
-    cover_url = Column(Text)
-    video_download_url = Column(Text)
-    music_download_url = Column(Text)
-    note_download_url = Column(Text)
+    retweet_count = Column(Text)  # 转发数
+    read_count = Column(Text)  # 阅读数
+    post_url = Column(Text)
+    stock_code = Column(String(20), index=True)  # 股票代码
+    stock_name = Column(Text)  # 股票名称
     source_keyword = Column(Text, default='')
 
-class DouyinAwemeComment(Base):
-    __tablename__ = 'douyin_aweme_comment'
+# 雪球评论表
+class XueqiuComment(Base):
+    __tablename__ = 'xueqiu_comment'
     id = Column(Integer, primary_key=True)
     user_id = Column(String(255))
-    sec_uid = Column(String(255))
-    short_user_id = Column(String(255))
-    user_unique_id = Column(String(255))
-    nickname = Column(Text)
+    user_name = Column(Text)
     avatar = Column(Text)
-    user_signature = Column(Text)
-    ip_location = Column(Text)
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)
     comment_id = Column(BigInteger, index=True)
-    aweme_id = Column(BigInteger, index=True)
+    post_id = Column(BigInteger, index=True)
     content = Column(Text)
     create_time = Column(BigInteger)
     sub_comment_count = Column(Text)
     parent_comment_id = Column(String(255))
     like_count = Column(Text, default='0')
-    pictures = Column(Text, default='')
 
-class DyCreator(Base):
-    __tablename__ = 'dy_creator'
+# 雪球用户信息表
+class XueqiuUserInfo(Base):
+    __tablename__ = 'xueqiu_user_info'
     id = Column(Integer, primary_key=True)
-    user_id = Column(String(255))
-    nickname = Column(Text)
+    user_id = Column(String(255), index=True, unique=True)
+    user_name = Column(Text)
     avatar = Column(Text)
-    ip_location = Column(Text)
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)
     desc = Column(Text)
-    gender = Column(Text)
-    follows = Column(Text)
-    fans = Column(Text)
-    interaction = Column(Text)
-    videos_count = Column(String(255))
+    follows = Column(Integer)
+    fans = Column(Integer)
+    total_posts = Column(Integer)
+    is_verified = Column(Integer)  # 是否认证
 
-class KuaishouVideo(Base):
-    __tablename__ = 'kuaishou_video'
+# 同花顺帖子表
+class TonghuashunPost(Base):
+    __tablename__ = 'tonghuashun_post'
     id = Column(Integer, primary_key=True)
-    user_id = Column(String(64))
-    nickname = Column(Text)
+    post_id = Column(String(255), index=True, unique=True)
+    user_id = Column(String(255), index=True)
+    author_name = Column(Text)
     avatar = Column(Text)
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)
-    video_id = Column(String(255), index=True)
-    video_type = Column(Text)
+    post_type = Column(Text)
     title = Column(Text)
-    desc = Column(Text)
+    content = Column(Text)
     create_time = Column(BigInteger, index=True)
     liked_count = Column(Text)
-    viewd_count = Column(Text)
-    video_url = Column(Text)
-    video_cover_url = Column(Text)
-    video_play_url = Column(Text)
+    comment_count = Column(Text)
+    share_count = Column(Text)
+    post_url = Column(Text)
+    stock_code = Column(String(20), index=True)  # 股票代码
+    stock_name = Column(Text)  # 股票名称
     source_keyword = Column(Text, default='')
 
-class KuaishouVideoComment(Base):
-    __tablename__ = 'kuaishou_video_comment'
+# 同花顺评论表
+class TonghuashunComment(Base):
+    __tablename__ = 'tonghuashun_comment'
     id = Column(Integer, primary_key=True)
-    user_id = Column(Text)
-    nickname = Column(Text)
+    user_id = Column(String(255))
+    user_name = Column(Text)
     avatar = Column(Text)
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)
     comment_id = Column(BigInteger, index=True)
-    video_id = Column(String(255), index=True)
+    post_id = Column(String(255), index=True)
     content = Column(Text)
     create_time = Column(BigInteger)
     sub_comment_count = Column(Text)
 
-class WeiboNote(Base):
-    __tablename__ = 'weibo_note'
+# 新浪财经帖子表
+class SinaFinancePost(Base):
+    __tablename__ = 'sina_finance_post'
     id = Column(Integer, primary_key=True)
-    user_id = Column(String(255))
-    nickname = Column(Text)
+    post_id = Column(BigInteger, index=True, unique=True)
+    user_id = Column(String(255), index=True)
+    author_name = Column(Text)
     avatar = Column(Text)
-    gender = Column(Text)
-    profile_url = Column(Text)
-    ip_location = Column(Text, default='')
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)
-    note_id = Column(BigInteger, index=True)
+    post_type = Column(Text)
+    title = Column(Text)
     content = Column(Text)
-    create_time = Column(BigInteger, index=True)
-    create_date_time = Column(String(255), index=True)
+    publish_time = Column(String(255), index=True)
     liked_count = Column(Text)
-    comments_count = Column(Text)
-    shared_count = Column(Text)
-    note_url = Column(Text)
+    comment_count = Column(Text)
+    share_count = Column(Text)
+    post_url = Column(Text)
+    stock_code = Column(String(20), index=True)  # 股票代码
+    stock_name = Column(Text)  # 股票名称
     source_keyword = Column(Text, default='')
 
-class WeiboNoteComment(Base):
-    __tablename__ = 'weibo_note_comment'
+# 新浪财经评论表
+class SinaFinanceComment(Base):
+    __tablename__ = 'sina_finance_comment'
     id = Column(Integer, primary_key=True)
     user_id = Column(String(255))
-    nickname = Column(Text)
+    user_name = Column(Text)
     avatar = Column(Text)
-    gender = Column(Text)
-    profile_url = Column(Text)
-    ip_location = Column(Text, default='')
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)
     comment_id = Column(BigInteger, index=True)
-    note_id = Column(BigInteger, index=True)
+    post_id = Column(BigInteger, index=True)
     content = Column(Text)
-    create_time = Column(BigInteger)
-    create_date_time = Column(String(255), index=True)
-    comment_like_count = Column(Text)
+    publish_time = Column(String(255), index=True)
+    like_count = Column(Text)
     sub_comment_count = Column(Text)
     parent_comment_id = Column(String(255))
 
-class WeiboCreator(Base):
-    __tablename__ = 'weibo_creator'
+# 新浪财经用户信息表
+class SinaFinanceUserInfo(Base):
+    __tablename__ = 'sina_finance_user_info'
     id = Column(Integer, primary_key=True)
-    user_id = Column(String(255))
-    nickname = Column(Text)
+    user_id = Column(String(255), index=True, unique=True)
+    user_name = Column(Text)
     avatar = Column(Text)
-    ip_location = Column(Text)
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)
     desc = Column(Text)
-    gender = Column(Text)
-    follows = Column(Text)
-    fans = Column(Text)
-    tag_list = Column(Text)
+    follows = Column(Integer)
+    fans = Column(Integer)
 
-class XhsCreator(Base):
-    __tablename__ = 'xhs_creator'
+# 金融界帖子表
+class JinrongjiePost(Base):
+    __tablename__ = 'jinrongjie_post'
     id = Column(Integer, primary_key=True)
-    user_id = Column(String(255))
-    nickname = Column(Text)
+    post_id = Column(String(255), index=True, unique=True)
+    user_id = Column(String(255), index=True)
+    author_name = Column(Text)
     avatar = Column(Text)
-    ip_location = Column(Text)
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)
-    desc = Column(Text)
-    gender = Column(Text)
-    follows = Column(Text)
-    fans = Column(Text)
-    interaction = Column(Text)
-    tag_list = Column(Text)
-
-class XhsNote(Base):
-    __tablename__ = 'xhs_note'
-    id = Column(Integer, primary_key=True)
-    user_id = Column(String(255))
-    nickname = Column(Text)
-    avatar = Column(Text)
-    ip_location = Column(Text)
-    add_ts = Column(BigInteger)
-    last_modify_ts = Column(BigInteger)
-    note_id = Column(String(255), index=True)
-    type = Column(Text)
+    post_type = Column(Text)
     title = Column(Text)
-    desc = Column(Text)
-    video_url = Column(Text)
-    time = Column(BigInteger, index=True)
-    last_update_time = Column(BigInteger)
-    liked_count = Column(Text)
-    collected_count = Column(Text)
-    comment_count = Column(Text)
-    share_count = Column(Text)
-    image_list = Column(Text)
-    tag_list = Column(Text)
-    note_url = Column(Text)
+    content = Column(Text)
+    publish_time = Column(String(32), index=True)
+    liked_count = Column(Integer, default=0)
+    comment_count = Column(Integer, default=0)
+    post_url = Column(Text)
+    stock_code = Column(String(20), index=True)  # 股票代码
+    stock_name = Column(Text)  # 股票名称
     source_keyword = Column(Text, default='')
-    xsec_token = Column(Text)
 
-class XhsNoteComment(Base):
-    __tablename__ = 'xhs_note_comment'
+# 金融界评论表
+class JinrongjieComment(Base):
+    __tablename__ = 'jinrongjie_comment'
     id = Column(Integer, primary_key=True)
     user_id = Column(String(255))
-    nickname = Column(Text)
+    user_name = Column(Text)
     avatar = Column(Text)
-    ip_location = Column(Text)
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)
     comment_id = Column(String(255), index=True)
-    create_time = Column(BigInteger, index=True)
-    note_id = Column(String(255))
+    post_id = Column(String(255), index=True)
     content = Column(Text)
-    sub_comment_count = Column(Integer)
-    pictures = Column(Text)
+    publish_time = Column(String(32), index=True)
+    sub_comment_count = Column(Integer, default=0)
     parent_comment_id = Column(String(255))
-    like_count = Column(Text)
+    like_count = Column(Integer, default=0)
 
-class TiebaNote(Base):
-    __tablename__ = 'tieba_note'
+# 和讯帖子表
+class HexunPost(Base):
+    __tablename__ = 'hexun_post'
     id = Column(Integer, primary_key=True)
-    note_id = Column(String(644), index=True)
+    post_id = Column(String(255), index=True, unique=True)
     title = Column(Text)
-    desc = Column(Text)
-    note_url = Column(Text)
-    publish_time = Column(String(255), index=True)
-    user_link = Column(Text, default='')
-    user_nickname = Column(Text, default='')
-    user_avatar = Column(Text, default='')
-    tieba_id = Column(String(255), default='')
-    tieba_name = Column(Text)
-    tieba_link = Column(Text)
-    total_replay_num = Column(Integer, default=0)
-    total_replay_page = Column(Integer, default=0)
-    ip_location = Column(Text, default='')
+    content = Column(Text)
+    post_url = Column(Text)
+    publish_time = Column(String(32), index=True)
+    author_name = Column(Text, default='')
+    user_id = Column(String(255), index=True)
+    avatar = Column(Text, default='')
+    liked_count = Column(Integer, default=0)
+    comment_count = Column(Integer, default=0)
+    stock_code = Column(String(20), index=True)  # 股票代码
+    stock_name = Column(Text)  # 股票名称
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)
     source_keyword = Column(Text, default='')
 
-class TiebaComment(Base):
-    __tablename__ = 'tieba_comment'
+# 和讯评论表
+class HexunComment(Base):
+    __tablename__ = 'hexun_comment'
     id = Column(Integer, primary_key=True)
     comment_id = Column(String(255), index=True)
     parent_comment_id = Column(String(255), default='')
     content = Column(Text)
-    user_link = Column(Text, default='')
-    user_nickname = Column(Text, default='')
-    user_avatar = Column(Text, default='')
-    tieba_id = Column(String(255), default='')
-    tieba_name = Column(Text)
-    tieba_link = Column(Text)
-    publish_time = Column(String(255), index=True)
-    ip_location = Column(Text, default='')
-    sub_comment_count = Column(Integer, default=0)
-    note_id = Column(String(255), index=True)
-    note_url = Column(Text)
-    add_ts = Column(BigInteger)
-    last_modify_ts = Column(BigInteger)
-
-class TiebaCreator(Base):
-    __tablename__ = 'tieba_creator'
-    id = Column(Integer, primary_key=True)
-    user_id = Column(String(64))
-    user_name = Column(Text)
-    nickname = Column(Text)
-    avatar = Column(Text)
-    ip_location = Column(Text)
-    add_ts = Column(BigInteger)
-    last_modify_ts = Column(BigInteger)
-    gender = Column(Text)
-    follows = Column(Text)
-    fans = Column(Text)
-    registration_duration = Column(Text)
-
-class ZhihuContent(Base):
-    __tablename__ = 'zhihu_content'
-    id = Column(Integer, primary_key=True)
-    content_id = Column(String(64), index=True)
-    content_type = Column(Text)
-    content_text = Column(Text)
-    content_url = Column(Text)
-    question_id = Column(String(255))
-    title = Column(Text)
-    desc = Column(Text)
-    created_time = Column(String(32), index=True)
-    updated_time = Column(Text)
-    voteup_count = Column(Integer, default=0)
-    comment_count = Column(Integer, default=0)
-    source_keyword = Column(Text)
+    user_name = Column(Text, default='')
     user_id = Column(String(255))
-    user_link = Column(Text)
-    user_nickname = Column(Text)
-    user_avatar = Column(Text)
-    user_url_token = Column(Text)
-    add_ts = Column(BigInteger)
-    last_modify_ts = Column(BigInteger)
-
-    # persist-1<persist1@126.com>
-    # 原因：修复 ORM 模型定义错误，确保与数据库表结构一致。
-    # 副作用：无
-    # 回滚策略：还原此行
-
-class ZhihuComment(Base):
-    __tablename__ = 'zhihu_comment'
-    id = Column(Integer, primary_key=True)
-    comment_id = Column(String(64), index=True)
-    parent_comment_id = Column(String(64))
-    content = Column(Text)
+    avatar = Column(Text, default='')
     publish_time = Column(String(32), index=True)
-    ip_location = Column(Text)
     sub_comment_count = Column(Integer, default=0)
+    post_id = Column(String(255), index=True)
+    post_url = Column(Text)
     like_count = Column(Integer, default=0)
-    dislike_count = Column(Integer, default=0)
-    content_id = Column(String(64), index=True)
-    content_type = Column(Text)
-    user_id = Column(String(64))
-    user_link = Column(Text)
-    user_nickname = Column(Text)
-    user_avatar = Column(Text)
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)
 
-class ZhihuCreator(Base):
-    __tablename__ = 'zhihu_creator'
+# 股票基础信息表
+class StockInfo(Base):
+    __tablename__ = 'stock_info'
     id = Column(Integer, primary_key=True)
-    user_id = Column(String(64), unique=True, index=True)
-    user_link = Column(Text)
-    user_nickname = Column(Text)
-    user_avatar = Column(Text)
-    url_token = Column(Text)
-    gender = Column(Text)
-    ip_location = Column(Text)
-    follows = Column(Integer, default=0)
-    fans = Column(Integer, default=0)
-    anwser_count = Column(Integer, default=0)
-    video_count = Column(Integer, default=0)
-    question_count = Column(Integer, default=0)
-    article_count = Column(Integer, default=0)
-    column_count = Column(Integer, default=0)
-    get_voteup_count = Column(Integer, default=0)
+    stock_code = Column(String(20), unique=True, index=True)  # 股票代码
+    stock_name = Column(Text)  # 股票名称
+    stock_type = Column(String(20))  # 股票类型：A股/港股/美股
+    exchange = Column(String(20))  # 交易所：上交所/深交所
+    industry = Column(Text)  # 所属行业
+    sector = Column(Text)  # 所属板块
+    listing_date = Column(String(32))  # 上市日期
+    market_cap = Column(BigInteger)  # 市值
+    total_shares = Column(BigInteger)  # 总股本
+    add_ts = Column(BigInteger)
+    last_modify_ts = Column(BigInteger)
+
+# 每日新闻表（保留用于热点新闻）
+class DailyNews(Base):
+    __tablename__ = 'daily_news'
+    id = Column(Integer, primary_key=True)
+    news_id = Column(String(128), index=True, unique=True)
+    source_platform = Column(String(32))  # 新闻源平台
+    title = Column(Text)
+    url = Column(Text)
+    description = Column(Text)
+    crawl_date = Column(String(32), index=True)
+    rank_position = Column(Integer)
+    stock_code = Column(String(20), index=True)  # 相关股票代码
+    stock_name = Column(Text)  # 相关股票名称
     add_ts = Column(BigInteger)
     last_modify_ts = Column(BigInteger)

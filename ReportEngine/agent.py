@@ -296,51 +296,39 @@ class ReportAgent:
     
     def _get_fallback_template_content(self) -> str:
         """获取备用模板内容"""
-        return """# 社会公共热点事件分析报告
+        return """# A股股票分析报告
 
 ## 执行摘要
-本报告针对当前社会热点事件进行综合分析，整合了多方信息源的观点和数据。
+基于多个分析引擎的综合研究，给出对目标主题或标的的核心判断与建议。
 
-## 事件概况
-### 基本信息
-- 事件性质：{event_nature}
-- 发生时间：{event_time}
-- 涉及范围：{event_scope}
+## 行业与公司概览
+- 行业位置与景气度
+- 公司业务结构与竞争优势
 
-## 舆情态势分析
-### 整体趋势
-{sentiment_analysis}
+## 基本面与估值分析
+- 收入、利润与现金流
+- 估值对比（PE、PB、EV/EBITDA 等）
+- 同业横向对比与变化趋势
 
-### 主要观点分布
-{opinion_distribution}
+## 市场表现与资金动向
+- 指数/板块/个股表现
+- 资金净流向、成交与换手
 
-## 媒体报道分析
-### 主流媒体态度
-{media_analysis}
+## 投资者情绪与舆情
+- 主要观点与热度
+- 风险偏好与分歧点
 
-### 报道重点
-{report_focus}
+## 风险提示
+- 经营、财务与外部政策风险
+- 可能的负面催化剂
 
-## 社会影响评估
-### 直接影响
-{direct_impact}
-
-### 潜在影响
-{potential_impact}
-
-## 应对建议
-### 即时措施
-{immediate_actions}
-
-### 长期策略
-{long_term_strategy}
-
-## 结论与展望
-{conclusion}
+## 投资建议
+- 综合评级与目标价（如适用）
+- 仓位与交易策略
+- 后续观察要点
 
 ---
-*报告类型：社会公共热点事件分析*
-*生成时间：{generation_time}*
+生成时间：{generation_time}
 """
     
     def _save_report(self, html_content: str):

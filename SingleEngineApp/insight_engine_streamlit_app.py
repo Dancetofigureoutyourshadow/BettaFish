@@ -40,9 +40,9 @@ def main():
         layout="wide"
     )
 
-    st.title("Insight Agent")
-    st.markdown("私有舆情数据库深度分析AI代理")
-    st.markdown("24小时全自动从包括微博、知乎、github、酷安等 13个 社媒平台、技术论坛广泛的爬取舆情数据")
+    st.title("📊 Insight Agent")
+    st.markdown("**私有股票数据库深度分析AI代理**")
+    st.markdown("💹 24小时全自动从东方财富、雪球、同花顺、新浪财经、金融界、和讯等财经平台、股票社区广泛爬取股票数据")
 
     # 检查URL参数
     try:

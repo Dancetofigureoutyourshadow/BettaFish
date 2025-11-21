@@ -149,13 +149,12 @@ class DatabaseManager:
             data_statistics_message += "平台内容统计:"
             data_statistics_message += "\n"
             platform_tables = {
-                'xhs_note': '小红书',
-                'douyin_aweme': '抖音',
-                'kuaishou_video': '快手',
-                'bilibili_video': 'B站',
-                'weibo_note': '微博',
-                'tieba_note': '贴吧',
-                'zhihu_content': '知乎'
+                'eastmoney_post': '东方财富',
+                'xueqiu_post': '雪球',
+                'tonghuashun_post': '同花顺',
+                'sina_finance_post': '新浪财经',
+                'jinrongjie_post': '金融界',
+                'hexun_post': '和讯'
             }
             
             for table, platform in platform_tables.items():
