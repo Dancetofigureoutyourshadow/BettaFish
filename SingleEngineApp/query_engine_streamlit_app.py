@@ -35,14 +35,14 @@ from utils.github_issues import error_with_issue_link
 def main():
     """主函数"""
     st.set_page_config(
-        page_title="Query Agent",
-        page_icon="",
+        page_title="Query Agent - 股票分析",
+        page_icon="📈",
         layout="wide"
     )
 
-    st.title("Query Agent")
+    st.title("Query Agent - 财经信息搜索")
     st.markdown("具备强大网页搜索能力的AI代理")
-    st.markdown("广度爬取官方报道与新闻，注重国内外资源相结合理解舆情")
+    st.markdown("广度爬取财经报道与新闻，注重国内外资源相结合理解股市动态")
 
     # 检查URL参数
     try:

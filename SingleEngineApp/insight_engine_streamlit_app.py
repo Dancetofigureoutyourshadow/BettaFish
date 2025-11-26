@@ -35,14 +35,14 @@ from utils.github_issues import error_with_issue_link
 def main():
     """主函数"""
     st.set_page_config(
-        page_title="Insight Agent",
-        page_icon="",
+        page_title="Insight Agent - 股票分析",
+        page_icon="📊",
         layout="wide"
     )
 
-    st.title("Insight Agent")
-    st.markdown("私有舆情数据库深度分析AI代理")
-    st.markdown("24小时全自动从包括微博、知乎、github、酷安等 13个 社媒平台、技术论坛广泛的爬取舆情数据")
+    st.title("Insight Agent - 私有数据库分析")
+    st.markdown("私有财经数据库深度分析AI代理")
+    st.markdown("24小时全自动从包括财经网站、研报平台、专业论坛等渠道广泛的爬取股市数据")
 
     # 检查URL参数
     try:

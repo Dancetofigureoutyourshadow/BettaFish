@@ -45,11 +45,11 @@ sqlite_db_config = {
 }
 
 # postgresql config - 使用MindSpider的数据库配置（如果DB_DIALECT是postgresql）或环境变量
-POSTGRESQL_DB_PWD = os.getenv("POSTGRESQL_DB_PWD", "bettafish")
-POSTGRESQL_DB_USER = os.getenv("POSTGRESQL_DB_USER", "bettafish")
-POSTGRESQL_DB_HOST = os.getenv("POSTGRESQL_DB_HOST", "127.0.0.1")
-POSTGRESQL_DB_PORT = os.getenv("POSTGRESQL_DB_PORT", "5444")
-POSTGRESQL_DB_NAME = os.getenv("POSTGRESQL_DB_NAME", "bettafish")
+POSTGRESQL_DB_PWD = os.getenv("POSTGRESQL_DB_PWD", "Labwaypg@2023")
+POSTGRESQL_DB_USER = os.getenv("POSTGRESQL_DB_USER", "root")
+POSTGRESQL_DB_HOST = os.getenv("POSTGRESQL_DB_HOST", "10.136.1.175")
+POSTGRESQL_DB_PORT = os.getenv("POSTGRESQL_DB_PORT", "5432")
+POSTGRESQL_DB_NAME = os.getenv("POSTGRESQL_DB_NAME", "betta-fish")
 
 postgresql_db_config = {
     "user": POSTGRESQL_DB_USER,

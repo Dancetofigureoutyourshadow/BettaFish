@@ -121,6 +121,7 @@ class LLMClient:
     def stream_invoke_to_string(self, system_prompt: str, user_prompt: str, **kwargs) -> str:
         """
         流式调用LLM并安全地拼接为完整字符串（避免UTF-8多字节字符截断）
+        处理模型响应长度限制，通过循环请求直到获取完整输出
         
         Args:
             system_prompt: 系统提示词
@@ -130,15 +131,56 @@ class LLMClient:
         Returns:
             完整的响应字符串
         """
-        # 以字节形式收集所有块
-        byte_chunks = []
-        for chunk in self.stream_invoke(system_prompt, user_prompt, **kwargs):
-            byte_chunks.append(chunk.encode('utf-8'))
+        full_response = ""
         
-        # 拼接所有字节，然后一次性解码
-        if byte_chunks:
-            return b''.join(byte_chunks).decode('utf-8', errors='replace')
-        return ""
+        # 设置合理的最大迭代次数以防止无限循环
+        max_iterations = 5
+        iteration = 0
+        
+        # 检查是否是由于长度限制导致的截断
+        is_truncated = True
+        
+        while iteration < max_iterations and is_truncated:
+            # 构造当前轮次的提示词
+            current_system_prompt = system_prompt
+            # 如果不是第一轮，添加继续指令
+            if iteration > 0:
+                current_user_prompt = f"{user_prompt}\n\n请继续完成前面未完成的部分。前面的内容：...{full_response[-1000:]}"
+            else:
+                current_user_prompt = user_prompt
+            
+            try:
+                # 以字节形式收集所有块
+                byte_chunks = []
+                for chunk in self.stream_invoke(current_system_prompt, current_user_prompt, **kwargs):
+                    byte_chunks.append(chunk.encode('utf-8'))
+                
+                # 拼接所有字节，然后一次性解码
+                if byte_chunks:
+                    chunk_response = b''.join(byte_chunks).decode('utf-8', errors='replace')
+                    full_response += chunk_response
+                    
+                    # 检查响应是否表明已完成
+                    # 如果响应较短或者以完整的句子结尾，则认为已完成
+                    # 同时检查是否可能因为长度限制被截断
+                    if (len(chunk_response) < 100 or 
+                        chunk_response.rstrip().endswith(('.', '。', '!', '！', '?', '？', '"', '”', "'", '’'))):
+                        is_truncated = False
+                    else:
+                        # 可能是由于长度限制被截断，需要继续请求
+                        is_truncated = True
+                else:
+                    # 没有更多内容了
+                    is_truncated = False
+                    
+            except Exception as e:
+                # 如果出现异常，记录日志并返回已获取的部分内容
+                logger.warning(f"流式调用出现异常: {e}，返回已获取的部分内容")
+                break
+            
+            iteration += 1
+        
+        return full_response
 
     @staticmethod
     def validate_response(response: Optional[str]) -> str:
